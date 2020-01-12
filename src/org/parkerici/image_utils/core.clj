@@ -1,7 +1,9 @@
 (ns org.parkerici.image-utils.core
   (:require [clojure.tools.cli :as cli]
             [clojure.string :as str]
-            [org.parkerici.image-utils.ij.core :as ij]))
+            [org.parkerici.image-utils.ij.core :as ij])
+
+  (:gen-class))
 
 (defn exit [status msg]
   (println msg)
