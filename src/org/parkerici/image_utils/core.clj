@@ -18,7 +18,7 @@
   [_ options _]
   ; TODO - Figure out how to make input required outside of here.
   (if (contains? options :input)
-    (ij/split-hyperstack (:input options))
+    (ij/split-hyperstack (:input options) (:output options) (:subfolder options))
     (exit 1 (error-msg ["Input is required"]))))
 
 (defn all-commands []
@@ -47,7 +47,10 @@
 
 (def cli-options
   ;; An option with a required argument
-  [["-i" "--input STRING" "Input image. Required."]])
+  [["-i" "--input PATH" "Input image path. Required."]
+   ["-o" "--output PATH" "Output folder path. Defaults to input image folder if not supplied."]
+   ["-s" "--subfolder" "Flag to output images to a subfolder instead of alongside the input image."
+    :default false]])
 
 (defn validate-args
   "Validate command line arguments. Either return a map indicating the program
