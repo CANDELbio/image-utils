@@ -16,9 +16,10 @@
   (println (str "Slices: " (.numSlices img))))
 
 (defn output-hyperstack-slice
-  [source-img slice fpath]
-  (println (str "Writing slice to " fpath))
-  (let [slice-img (hyperstack/slice->img source-img slice)]
+  [source-img slice dimension img-base-name img-extension outpath]
+  (let [fname (str img-base-name "_" dimension img-extension)
+        fpath (path/join outpath fname)
+        slice-img (hyperstack/slice->img source-img slice)]
     (ij-io/write-tiff slice-img fpath)))
 
 (defn split-hyperstack
@@ -29,11 +30,11 @@
    (let [img-base-name (fs/base-name fpath true)
          img-extension (fs/extension fpath)
          img (ij-io/read-tiff fpath)
-         _ (print-image-info img)
          slices (hyperstack/img->slices img)]
-     ;TODO - Really slow with large images. Need to parallelize.
-     (doall (for [dimension (keys slices)]
-              (let [fname (str img-base-name "_" dimension img-extension)
-                    fpath (path/join outpath fname)]
-                (output-hyperstack-slice img (get slices dimension) fpath)))))))
+     (print-image-info img)
+     (println "Writing slices to files. Warning: this may take a while.")
+     (doall (pmap
+             #(output-hyperstack-slice img (get slices %) % img-base-name img-extension outpath)
+             (keys slices)))
+     (println "Done!"))))
 
