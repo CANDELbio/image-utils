@@ -28,8 +28,8 @@
         slice-img (hyperstack/slice->img source-img slice)]
     (ij-io/write-tiff slice-img fpath)))
 
-(defn split-hyperstack
-  ([fpath outpath output-to-subfolder]
+(defn split-hyperstack-file
+  [fpath outpath output-to-subfolder]
    (println (str "\nReading image at " fpath))
    (let [img-base-name (fs/base-name fpath true)
          img-extension (fs/extension fpath)
@@ -41,6 +41,20 @@
      (println "Writing slices to files. Warning: this may take a while.")
      (doall (pmap
              #(output-hyperstack-slice img (get slices %) % img-base-name img-extension fdir)
-             (keys slices)))
-     (println "Done!"))))
+             (keys slices)))))
 
+(defn tiffs-in-dir
+  [fpath]
+  (remove nil? (flatten (into [] (for [ext-pattern ["*.tif" "*.TIF" "*.tiff" "*.TIFF"]]
+             (fs/glob (fs/file fpath) ext-pattern))))))
+
+(defn split-hyperstack-dir
+  [fpath outpath output-to-subfolder]
+  (doall (for [tiff (tiffs-in-dir fpath)]
+           (split-hyperstack-file (.getPath tiff) outpath output-to-subfolder))))
+
+(defn split-hyperstack
+  [fpath outpath output-to-subfolder]
+  (if (fs/file? fpath)
+    (split-hyperstack-file fpath outpath output-to-subfolder)
+    (split-hyperstack-dir fpath outpath output-to-subfolder)))

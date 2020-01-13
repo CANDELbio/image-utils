@@ -1,6 +1,7 @@
 (ns org.parkerici.image-utils.core
   (:require [clojure.tools.cli :as cli]
             [clojure.string :as str]
+            [me.raynes.fs :as fs]
             [org.parkerici.image-utils.ij.core :as ij])
 
   (:gen-class))
@@ -20,8 +21,10 @@
   [_ options _]
   ; TODO - Figure out how to make input required outside of here.
   (if (contains? options :input)
-    (ij/split-hyperstack (:input options) (:output options) (:subfolder options))
-    (exit 1 (error-msg ["Input is required"]))))
+    (if (fs/exists? (:input options))
+      (ij/split-hyperstack (:input options) (:output options) (:subfolder options))
+      (exit 1 (error-msg ["Input path does not exist."])))
+    (exit 1 (error-msg ["Input is required."]))))
 
 (defn all-commands []
   (sort (keys (dissoc (methods command) :default))))
@@ -49,7 +52,7 @@
 
 (def cli-options
   ;; An option with a required argument
-  [["-i" "--input PATH" "Input image path. Required."]
+  [["-i" "--input PATH" "Input image path. Either a directory with tiffs or a tiff file. Required."]
    ["-o" "--output PATH" "Output folder path. Defaults to input image folder if not supplied."]
    ["-s" "--subfolder" "Flag to output images to a subfolder instead of alongside the input image."
     :default false]])
