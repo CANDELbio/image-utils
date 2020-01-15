@@ -4,7 +4,7 @@ Imaging utilities released by the Parker Institute for Cancer Immunotherapy.
 
 ## Installation
 
-Download from (releases)[https://github.com/ParkerICI/image-utils/releases].
+Download from [releases](https://github.com/ParkerICI/image-utils/releases).
 
 ## Usage
 
