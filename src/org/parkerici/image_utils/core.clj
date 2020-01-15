@@ -76,4 +76,4 @@
   (let [{:keys [action options summary exit-message ok?]} (validate-args args)]
     (if exit-message
       (exit (if ok? 0 1) exit-message)
-       (command action options summary))))
+      (command action options summary))))

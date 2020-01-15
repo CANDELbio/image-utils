@@ -15,10 +15,10 @@
    (if  (= (.numDimensions img) 2)
      {dimensions img}
      (apply merge (for [x (range (.dimension img 2))]
-              (let [split-dimensions (str/split dimensions #"_")
-                    filtered-dimensions (filter not-empty split-dimensions)
-                    new-dimensions (str/join "_" (concat filtered-dimensions [x]))]
-                (img->slices (Views/hyperSlice img 2 x) new-dimensions)))))))
+                    (let [split-dimensions (str/split dimensions #"_")
+                          filtered-dimensions (filter not-empty split-dimensions)
+                          new-dimensions (str/join "_" (concat filtered-dimensions [x]))]
+                      (img->slices (Views/hyperSlice img 2 x) new-dimensions)))))))
 
 ; The slices returned by img->slices cannot be directly written to a file as they are IntervalView objects.
 ; If we want to save a slice to a file, first we must convert 

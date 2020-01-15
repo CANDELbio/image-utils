@@ -4,7 +4,6 @@
   :license {:name "GPL-3.0 "
             :url "https://www.gnu.org/licenses/gpl-3.0.en.html"}
   :dependencies [[org.clojure/clojure "1.10.0"]
-                 [org.clojure/tools.nrepl "0.2.13"]
                  [org.clojure/tools.cli "0.4.2"]
                  [me.raynes/fs "1.4.6"]
                  [net.imglib2/imglib2 "5.8.0"]
@@ -16,4 +15,7 @@
   :repositories {"imagej snapshots" "https://maven.imagej.net/content/repositories/snapshots/"
                  "imagej releases" "https://maven.imagej.net/content/repositories/releases/"
                  "imagej public" "https://maven.imagej.net/content/repositories/public/"}
-  :profiles {:uberjar {:aot :all}})
+  :profiles {:uberjar
+             {:aot :all}
+             :dev
+             {:dependencies [[org.clojure/tools.nrepl "0.2.13"]]}})
