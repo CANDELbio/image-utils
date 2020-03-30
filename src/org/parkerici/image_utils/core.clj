@@ -26,6 +26,14 @@
       (exit 1 (error-msg ["Input path does not exist."])))
     (exit 1 (error-msg ["Input is required."]))))
 
+(defmethod command "split-tiled"
+  [_ options _]
+  (if (contains? options :input)
+    (if (fs/exists? (:input options))
+      (ij/split-tiled (:input options) (:output options) (:subfolder options))
+      (exit 1 (error-msg ["Input path does not exist."])))
+    (exit 1 (error-msg ["Input is required."]))))
+
 (defn all-commands []
   (sort (keys (dissoc (methods command) :default))))
 

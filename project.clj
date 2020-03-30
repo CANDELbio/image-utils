@@ -1,4 +1,4 @@
-(defproject image-utils "0.1.0"
+(defproject image-utils "0.1.1"
   :description "PICI Image Utilities"
   :url "http://example.com/FIXME"
   :license {:name "GPL-3.0 "
@@ -8,7 +8,9 @@
                  [me.raynes/fs "1.4.6"]
                  [net.imglib2/imglib2 "5.8.0"]
                  [net.imglib2/imglib2-ij "2.0.0-beta-45"]
-                 [net.imagej/ij "1.52s"]]
+                 [net.imagej/ij "1.52s"]
+                 [ome/formats-gpl "6.1.1"]
+                 [ome/bio-formats_plugins "6.1.1"]]
   :main ^:skip-aot org.parkerici.image-utils.core
   :target-path "target/%s"
   :jvm-opts ["-Xmx16G"]
