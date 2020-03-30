@@ -43,6 +43,7 @@
              #(output-hyperstack-slice img (get slices %) % img-base-name img-extension fdir)
              (keys slices)))))
 
+
 (defn tiffs-in-dir
   [fpath]
   (remove nil? (flatten (into [] (for [ext-pattern ["*.tif" "*.TIF" "*.tiff" "*.TIFF"]]
