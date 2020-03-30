@@ -35,7 +35,10 @@ Optional. If used, generates a folder for each tiff being split and puts the ind
 
 `$ java -jar image-utils-0.1.0-standalone.jar split-tiled [args]`
 
-Splits a tiled tiff into individual tiffs. Accepts the following options:
+Splits a tiled tiff into individual tiffs.
+Unlike split-hyperstack which ouputs [originalfilename]_[channel].tiff, 
+split tiled outputs the files as [channel].tiff, so it is recommended 
+to use `--subfolder`. Accepts the following options:
 
 `-i` or `--input`
 Required. Either a tiff file or a directory containing multiple tiff files to be split.
