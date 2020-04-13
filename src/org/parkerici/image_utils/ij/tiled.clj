@@ -1,5 +1,6 @@
 (ns org.parkerici.image-utils.ij.tiled
-  (:require [clojure.xml])
+  (:require [clojure.xml]
+            [org.parkerici.image-utils.utils.error :as error])
   (:import [loci.plugins BF]
            [java.io ByteArrayInputStream]
            [ij IJ ImagePlus ImageStack]
@@ -41,13 +42,15 @@
 
 (defn get-channels
   [imp]
-  (let [info (.getProperty imp "Info")
+  (let [info (.getInfoProperty imp)
         split-info (clojure.string/split-lines info)
-        name-strings (filterv #(clojure.string/starts-with? % "Name #") split-info)
-        channels (map (fn [x] (last (clojure.string/split x #" = "))) name-strings)
-        channels-underscore (map (fn [x] (clojure.string/replace x #" " "_")) channels)
-        ]
-    channels-underscore))
+        name-strings (filterv #(clojure.string/starts-with? % "Name #") split-info)]
+    (if (> (count name-strings) 0)
+      (let [channels (map (fn [x] (last (clojure.string/split x #" = "))) name-strings)
+            channels-underscore (map (fn [x] (clojure.string/replace x #" " "_")) channels)]
+        channels-underscore)
+      (error/exit 1 (error/error-msg ["No field Name found in image Info"]))
+      )))
 
 (defn split-channels
   "Split channels."
@@ -73,21 +76,21 @@
   (first (BF/openImagePlus filename))
   )
 
-;(comment
-;  (def filename "/Users/rkageyama/temp/seg/expandedtest/raw/840-100100-002_panel21_Baseline_10.tiff")
-;  (def metadata (read-tiff-metadata filename))
-;  (def myimg (BF/openImagePlus filename))
-;  (def imp (first myimg))
-;  (def channels (get-channels imp))
-;  (def split (split-channels imp))
-;  (range 3)
-;  (for [n (range (count split))]
-;    (let [channel (nth channels n)
-;          filepath (format "%s.tiff" channel)
-;          slice (nth split n)
-;          ]
-;      (save-imp-as-tiff slice filepath))
-;    )
-;  (def impo (ImporterOptions.setquiet))
-;  (map println (hash-map "a" "b"))
-;  (ImporterOptions/KEY_QUIET) )
+(comment
+  (def filename "/Users/rkageyama/temp/seg/expandedtest/raw/840-100100-002_panel21_Baseline_10.tiff")
+  (def metadata (read-tiff-metadata filename))
+  (def myimg (BF/openImagePlus filename))
+  (def imp (first myimg))
+  (def channels (get-channels imp))
+  (def split (split-channels imp))
+  (range 3)
+  (for [n (range (count split))]
+    (let [channel (nth channels n)
+          filepath (format "%s.tiff" channel)
+          slice (nth split n)
+          ]
+      (save-imp-as-tiff slice filepath))
+    )
+  (def impo (ImporterOptions.setquiet))
+  (map println (hash-map "a" "b"))
+  (ImporterOptions/KEY_QUIET) )
