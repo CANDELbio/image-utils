@@ -23,15 +23,15 @@
     fdir))
 
 (defn output-hyperstack-slice
-  [source-img slice dimension img-base-name img-extension fdir]
-  (let [fname (str img-base-name "_" dimension img-extension)
+  [source-img slice dimension img-base-name img-extension fdir output-to-subfolder]
+  (let [fname (if output-to-subfolder (str dimension img-extension) (str img-base-name "_" dimension img-extension))
         fpath (path/join fdir fname)
         slice-img (hyperstack/slice->img source-img slice)]
     (ij-io/write-tiff slice-img fpath)))
 
 (defn output-tiled-slice
-  [slice dimension img-base-name img-extension fdir]
-  (let [fname (str dimension img-extension)
+  [slice dimension img-base-name img-extension fdir output-to-subfolder]
+  (let [fname (if output-to-subfolder (str dimension img-extension) (str img-base-name "_" dimension img-extension))
         fpath (path/join fdir fname)]
     (tiled/save-imp-as-tiff  slice fpath)))
 
@@ -47,7 +47,7 @@
      (print-image-info img)
      (println "Writing slices to files. Warning: this may take a while.")
      (doall (pmap
-             #(output-hyperstack-slice img (get slices %) % img-base-name img-extension fdir)
+             #(output-hyperstack-slice img (get slices %) % img-base-name img-extension fdir output-to-subfolder)
              (keys slices)))))
 
 (defn split-tiled-file
@@ -64,7 +64,7 @@
     ;(print-image-info img)
     (println "Writing slices to files. Warning: this may take a while.")
     (doall (pmap
-             #(output-tiled-slice (get slices-map %) % img-base-name img-extension fdir)
+             #(output-tiled-slice (get slices-map %) % img-base-name img-extension fdir output-to-subfolder)
              (keys slices-map)
              ))))
 

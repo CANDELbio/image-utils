@@ -29,16 +29,13 @@ Required. Either a tiff file or a directory containing multiple tiff files to be
 Optional. A folder to write the output files to. Will create if it does not exist. Defaults to the parent folder of the tiff being split.
 
 `-s` or `--subfolder`
-Optional. If used, generates a folder for each tiff being split and puts the individual tiffs in the subfolder instead of alongside the parent tiff.
+Optional. If used, generates a folder for each tiff being split and puts the individual tiffs in the subfolder instead of alongside the parent tiff. Tiffs will be named only for the channel and not contain the sample name.
 
 ### split-tiled
 
 `$ java -jar image-utils-0.1.0-standalone.jar split-tiled [args]`
 
 Splits a tiled tiff into individual tiffs.
-Unlike split-hyperstack which ouputs [originalfilename]_[channel].tiff, 
-split tiled outputs the files as [channel].tiff, so it is recommended 
-to use `--subfolder`. Accepts the following options:
 
 `-i` or `--input`
 Required. Either a tiff file or a directory containing multiple tiff files to be split.
@@ -47,7 +44,7 @@ Required. Either a tiff file or a directory containing multiple tiff files to be
 Optional. A folder to write the output files to. Will create if it does not exist. Defaults to the parent folder of the tiff being split.
 
 `-s` or `--subfolder`
-Optional. If used, generates a folder for each tiff being split and puts the individual tiffs in the subfolder instead of alongside the parent tiff.
+Optional. If used, generates a folder for each tiff being split and puts the individual tiffs in the subfolder instead of alongside the parent tiff. Tiffs will be named only for the channel and not contain the sample name.
 
 ### help
 
