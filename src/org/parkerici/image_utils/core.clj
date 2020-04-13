@@ -2,17 +2,12 @@
   (:require [clojure.tools.cli :as cli]
             [clojure.string :as str]
             [me.raynes.fs :as fs]
-            [org.parkerici.image-utils.ij.core :as ij])
+            [org.parkerici.image-utils.ij.core :as ij]
+            [org.parkerici.image-utils.utils.error :as error])
 
   (:gen-class))
 
-(defn exit [status msg]
-  (println msg)
-  (System/exit status))
 
-(defn error-msg [errors]
-  (str "The following errors occurred while parsing your command:\n\n"
-       (str/join \newline errors)))
 
 (defmulti command
   (fn [argument _options _summary] argument))
@@ -23,8 +18,16 @@
   (if (contains? options :input)
     (if (fs/exists? (:input options))
       (ij/split-hyperstack (:input options) (:output options) (:subfolder options))
-      (exit 1 (error-msg ["Input path does not exist."])))
-    (exit 1 (error-msg ["Input is required."]))))
+      (error/exit 1 (error/error-msg ["Input path does not exist."])))
+    (error/exit 1 (error/error-msg ["Input is required."]))))
+
+(defmethod command "split-tiled"
+  [_ options _]
+  (if (contains? options :input)
+    (if (fs/exists? (:input options))
+      (ij/split-tiled (:input options) (:output options) (:subfolder options))
+      (error/exit 1 (error/error-msg ["Input path does not exist."])))
+    (error/exit 1 (error/error-msg ["Input is required."]))))
 
 (defn all-commands []
   (sort (keys (dissoc (methods command) :default))))
@@ -67,7 +70,7 @@
       (:help options) ; help => exit OK with usage summary
       {:exit-message (usage summary) :ok? true}
       errors ; errors => exit with description of errors
-      {:exit-message (error-msg errors)}
+      {:exit-message (error/error-msg errors)}
       ;; custom validation on arguments
       :else ; failed custom validation => exit with usage summary
       {:action (first arguments) :options options :summary summary})))
@@ -75,5 +78,5 @@
 (defn -main [& args]
   (let [{:keys [action options summary exit-message ok?]} (validate-args args)]
     (if exit-message
-      (exit (if ok? 0 1) exit-message)
+      (error/exit (if ok? 0 1) exit-message)
       (command action options summary))))
