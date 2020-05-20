@@ -1,4 +1,4 @@
-(defproject image-utils "0.1.1"
+(defproject image-utils "0.1.2"
   :description "PICI Image Utilities"
   :url "http://example.com/FIXME"
   :license {:name "GPL-3.0 "
