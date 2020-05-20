@@ -10,3 +10,8 @@
   "Joins the elements passed in into a path"
   [& args]
   (str "/" (str/join "/" (flatten (map #(split %) (remove empty? args))))))
+
+(defn sanitize-filename
+  "Remove offensive characters from filenames"
+  [fname]
+  (str/replace fname #"[/]" "-"))
