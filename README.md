@@ -50,3 +50,6 @@ Optional. If used, generates a folder for each tiff being split and puts the ind
 
 Outputs help and usage information.
 
+## License
+
+Released under Apache 2 license. See the [LICENSE](LICENSE.md) file for details.
